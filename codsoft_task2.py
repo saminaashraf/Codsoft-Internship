@@ -34,37 +34,4 @@ Y_train
 model = LinearRegression()
 model.fit(X_train, Y_train)
 
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
-
-file = pd.read_csv('/content/drive/MyDrive/Colab Notebooks/tested.csv')
-file
-
-file.dropna(subset=['Age', 'Fare'], inplace=True)
-
-X = file[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Cabin', 'Embarked']]
-y = file['Survived']
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-categorical_cols = ['Sex', 'Cabin', 'Embarked']
-X_train_encoded = pd.get_dummies(X_train, columns=categorical_cols, drop_first=True)
-X_test_encoded = pd.get_dummies(X_test, columns=categorical_cols, drop_first=True)
-
-X_test_encoded = X_test_encoded.reindex(columns=X_train_encoded.columns, fill_value=0)
-
-classifier = LogisticRegression(random_state=42, max_iter=1000)  # Increase max_iter
-classifier.fit(X_train_encoded, y_train)
-
-y_pred = classifier.predict(X_test_encoded)
-
-accuracy = accuracy_score(y_test, y_pred)
-report = classification_report(y_test, y_pred)
-
-print(f"Accuracy: {accuracy * 100:.2f}%")
-print("Classification Report:")
-print(report)
 
